@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Iterable, Sequence
+from typing import Iterable
 
 
 class Sudoku:
@@ -19,14 +19,7 @@ class Sudoku:
     def place(self, value: int, x: int, y: int) -> None:
         """Place value at x,y."""
         row = self._grid[y]
-        new_row = ""
-
-        for i in range(9):
-            if i == x:
-                new_row += str(value)
-            else:
-                new_row += row[i]
-
+        new_row = row[:x] + f"{value}" + row[x + 1:]
         self._grid[y] = new_row
 
     def unplace(self, x: int, y: int) -> None:
@@ -37,13 +30,7 @@ class Sudoku:
 
     def value_at(self, x: int, y: int) -> int:
         """Returns the value at x,y."""
-        value = -1
-
-        for i in range(9):
-            for j in range(9):
-                if i == x and j == y:
-                    row = self._grid[y]
-                    value = int(row[x])
+        value = int(self._grid[y][x])
 
         return value
 
@@ -87,10 +74,7 @@ class Sudoku:
 
     def row_values(self, i: int) -> Iterable[int]:
         """Returns all values at i-th row."""
-        values = []
-
-        for j in range(9):
-            values.append(self.value_at(j, i))
+        values = list(map(int, self._grid[i]))
 
         return values
 
@@ -99,7 +83,7 @@ class Sudoku:
         values = []
 
         for j in range(9):
-            values.append(self.value_at(i, j))
+            values.append(int(self._grid[j][i]))
 
         return values
 
@@ -118,7 +102,7 @@ class Sudoku:
 
         for x in range(x_start, x_start + 3):
             for y in range(y_start, y_start + 3):
-                values.append(self.value_at(x, y))
+                values.append(int(self._grid[y][x]))
 
         return values
 
